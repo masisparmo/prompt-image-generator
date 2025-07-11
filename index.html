@@ -437,6 +437,10 @@
                 expertAnswerOutput.innerHTML = '';
             }
 
+            function getAspectRatioValue(aspectRatioString) {
+                const match = aspectRatioString.match(/(\d+:\d+)/);
+                return match ? match[1] : '1:1';
+            }
 
             generateBtn.addEventListener('click', async () => {
                 const apiKey = document.getElementById('apiKey').value.trim();
@@ -452,11 +456,13 @@
 
                 let metaPrompt = '';
                 const promptType = promptTypeSelect.value;
+                let aspectRatioValue = '1:1';
 
                 if (promptType === 'general') {
                     const idea = document.getElementById('idea').value.trim();
                     if (!idea) { showError("Harap masukkan ide dasar Anda."); loader.classList.add('hidden'); return; }
-                    const aspectRatio = document.getElementById('aspectRatio').value;
+                    const aspectRatioString = document.getElementById('aspectRatio').value;
+                    aspectRatioValue = getAspectRatioValue(aspectRatioString);
                     const customStyle = document.getElementById('customStyle').value.trim();
                     const style = customStyle || document.getElementById('style').value;
                     const customLighting = document.getElementById('customLighting').value.trim();
@@ -466,14 +472,14 @@
                     Ide dasar pengguna: "${idea}"
                     Gaya visual yang dipilih: "${style}"
                     Pencahayaan yang dipilih: "${lighting}"
-                    Format/rasio aspek yang diinginkan: "${aspectRatio}"
-                    Gabungkan elemen-elemen ini menjadi satu paragraf yang utuh dan deskriptif. Di akhir prompt, **wajib** tambahkan rasio aspek dalam format '--ar [rasio]'. Contohnya, jika format adalah 'Lanskap 16:9', maka tambahkan '--ar 16:9' di akhir. Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
+                    Gabungkan elemen-elemen ini menjadi satu paragraf yang utuh dan deskriptif. Jangan tambahkan teks pengantar, penjelasan, atau parameter rasio aspek. Hanya hasilkan prompt deskriptifnya saja.`;
                 
                 } else if (promptType === 'logo') {
                     const brandDesc = document.getElementById('logoBrandDesc').value.trim();
                     if (!brandDesc) { showError("Harap masukkan deskripsi brand."); loader.classList.add('hidden'); return; }
                     const logoName = document.getElementById('logoName').value.trim();
                     const logoStyle = document.getElementById('logoStyle').value.trim();
+                    aspectRatioValue = '1:1';
 
                     metaPrompt = `Anda adalah seorang konsultan desain logo ahli. Tugas Anda adalah menghasilkan sebuah prompt detail dalam Bahasa Indonesia untuk AI teks-ke-gambar untuk membuat logo profesional. Prompt harus berupa satu paragraf yang utuh.
                     Deskripsi Brand/Ide Inti: "${brandDesc}"
@@ -485,8 +491,7 @@
                     3.  **Tipografi:** Sarankan gaya font jika nama brand disertakan.
                     4.  **Palet Warna:** Sarankan skema warna primer dan sekunder.
                     5.  **Kesan Keseluruhan:** Akhiri prompt dengan frasa seperti "dengan latar belakang putih bersih, detail tajam, cocok untuk identitas brand."
-                    **PENTING**: Di akhir seluruh prompt, tambahkan '--ar 1:1' untuk memastikan formatnya persegi.
-                    Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
+                    Jangan tambahkan teks pengantar, penjelasan, atau parameter rasio aspek. Hanya hasilkan prompt deskriptifnya saja.`;
 
                 } else if (promptType === 'packaging') {
                     const productName = document.getElementById('packagingProductName').value.trim();
@@ -494,6 +499,7 @@
                     const productDesc = document.getElementById('packagingProductDesc').value.trim();
                     const packagingType = document.getElementById('packagingType').value.trim();
                     const packagingStyle = document.getElementById('packagingStyle').value.trim();
+                    aspectRatioValue = '3:4';
 
                     metaPrompt = `Anda adalah seorang desainer kemasan produk ahli. Tugas Anda adalah menghasilkan sebuah prompt detail dalam Bahasa Indonesia untuk AI teks-ke-gambar untuk membuat desain kemasan produk profesional. Prompt harus berupa satu paragraf yang utuh.
                     Nama Produk: "${productName}"
@@ -506,13 +512,13 @@
                     3.  **Elemen Visual:** Deskripsikan grafis kunci, ilustrasi, atau pola yang mencerminkan deskripsi dan gaya produk.
                     4.  **Palet Warna:** Sarankan skema warna yang cocok dengan gaya desain.
                     5.  **Latar:** Tempatkan produk dalam pengaturan studio yang sederhana dan bersih dengan pencahayaan profesional untuk menonjolkan desain (misalnya, "dengan latar belakang netral, pencahayaan studio").
-                    **PENTING**: Di akhir seluruh prompt, tambahkan '--ar 3:4' untuk format potret yang cocok untuk kemasan.
-                    Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
+                    Jangan tambahkan teks pengantar, penjelasan, atau parameter rasio aspek. Hanya hasilkan prompt deskriptifnya saja.`;
                 
                 } else if (promptType === 'productPhoto') {
                     const productName = document.getElementById('productPhotoName').value.trim();
                     if (!productName) { showError("Harap masukkan nama produk."); loader.classList.add('hidden'); return; }
-                    const productPhotoAspectRatio = document.getElementById('productPhotoAspectRatio').value.trim();
+                    const aspectRatioString = document.getElementById('productPhotoAspectRatio').value;
+                    aspectRatioValue = getAspectRatioValue(aspectRatioString);
                     const productDesc = document.getElementById('productPhotoDesc').value.trim();
                     const productSetting = document.getElementById('productPhotoSetting').value.trim();
                     const productStyle = document.getElementById('productPhotoStyle').value.trim();
@@ -522,15 +528,13 @@
                     Deskripsi Produk: "${productDesc}"
                     Latar/Setting yang Diinginkan: "${productSetting}"
                     Gaya Foto yang Diminta: "${productStyle}"
-                    Format/Rasio Aspek yang Diinginkan: "${productPhotoAspectRatio}"
                     Berdasarkan ini, buatlah sebuah prompt untuk foto produk yang fotorealistis dan berkualitas tinggi. Prompt harus mencakup:
                     1.  **Subjek & Fokus:** Deskripsikan produk secara detail dan bagaimana ia ditampilkan (misalnya, close-up pada tekstur, melayang di udara).
                     2.  **Latar & Lingkungan:** Elaborasi pada setting yang diminta untuk menciptakan suasana yang sesuai.
                     3.  **Pencahayaan:** Jelaskan pencahayaan secara spesifik (misalnya, cahaya alami yang lembut, pencahayaan studio yang tajam, siluet dramatis).
                     4.  **Komposisi & Sudut Pandang:** Sarankan sudut pandang kamera dan komposisi (misalnya, eye-level, low angle, aturan sepertiga).
                     5.  **Suasana & Kesan:** Deskripsikan mood keseluruhan (misalnya, mewah, energik, tenang, futuristik).
-                    **PENTING**: Di akhir seluruh prompt, **wajib** tambahkan rasio aspek dalam format '--ar [rasio]'. Contohnya, jika format adalah 'Lanskap 4:3', maka tambahkan '--ar 4:3' di akhir.
-                    Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
+                    Jangan tambahkan teks pengantar, penjelasan, atau parameter rasio aspek. Hanya hasilkan prompt deskriptifnya saja.`;
                 }
                 
                 try {
@@ -555,7 +559,8 @@
                         result.candidates[0].content && result.candidates[0].content.parts &&
                         result.candidates[0].content.parts.length > 0) {
                         const generatedText = result.candidates[0].content.parts[0].text;
-                        promptText.textContent = generatedText;
+                        const finalPrompt = `buatkan gambar/foto: ${generatedText.trim()} --ar ${aspectRatioValue}`;
+                        promptText.textContent = finalPrompt;
                         promptOutput.classList.remove('hidden');
                     } else {
                         throw new Error("Respons API tidak valid atau kosong.");
