@@ -198,6 +198,15 @@
                         <input type="text" id="productPhotoName" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: 'Sepatu Lari Kilat 2.0'">
                     </div>
                     <div>
+                        <label for="productPhotoAspectRatio" class="block text-sm font-bold text-slate-700 mb-2">Format/Rasio Aspek</label>
+                        <select id="productPhotoAspectRatio" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2">
+                            <option value="Persegi 1:1 (cocok untuk e-commerce)">Persegi 1:1 (E-commerce)</option>
+                            <option value="Potret 4:5 (cocok untuk feed Instagram)">Potret 4:5 (Feed Instagram)</option>
+                            <option value="Lanskap 4:3 (cocok untuk banner situs web)">Lanskap 4:3 (Banner Situs Web)</option>
+                            <option value="Lanskap 16:9 (cocok untuk iklan video)">Lanskap 16:9 (Iklan Video)</option>
+                        </select>
+                    </div>
+                    <div>
                         <label for="productPhotoDesc" class="block text-sm font-bold text-slate-700 mb-2">Deskripsi & Fitur Utama Produk</label>
                         <textarea id="productPhotoDesc" rows="3" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: Sepatu lari ultra-ringan dengan sol busa responsif dan upper yang breathable"></textarea>
                     </div>
@@ -458,7 +467,7 @@
                     Gaya visual yang dipilih: "${style}"
                     Pencahayaan yang dipilih: "${lighting}"
                     Format/rasio aspek yang diinginkan: "${aspectRatio}"
-                    Gabungkan elemen-elemen ini menjadi satu paragraf yang utuh. Prompt harus deskriptif, berfokus pada detail visual, suasana, dan atmosfer. Jangan tambahkan teks pengantar, kata penutup, atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
+                    Gabungkan elemen-elemen ini menjadi satu paragraf yang utuh dan deskriptif. Di akhir prompt, **wajib** tambahkan rasio aspek dalam format '--ar [rasio]'. Contohnya, jika format adalah 'Lanskap 16:9', maka tambahkan '--ar 16:9' di akhir. Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
                 
                 } else if (promptType === 'logo') {
                     const brandDesc = document.getElementById('logoBrandDesc').value.trim();
@@ -476,6 +485,7 @@
                     3.  **Tipografi:** Sarankan gaya font jika nama brand disertakan.
                     4.  **Palet Warna:** Sarankan skema warna primer dan sekunder.
                     5.  **Kesan Keseluruhan:** Akhiri prompt dengan frasa seperti "dengan latar belakang putih bersih, detail tajam, cocok untuk identitas brand."
+                    **PENTING**: Di akhir seluruh prompt, tambahkan '--ar 1:1' untuk memastikan formatnya persegi.
                     Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
 
                 } else if (promptType === 'packaging') {
@@ -496,11 +506,13 @@
                     3.  **Elemen Visual:** Deskripsikan grafis kunci, ilustrasi, atau pola yang mencerminkan deskripsi dan gaya produk.
                     4.  **Palet Warna:** Sarankan skema warna yang cocok dengan gaya desain.
                     5.  **Latar:** Tempatkan produk dalam pengaturan studio yang sederhana dan bersih dengan pencahayaan profesional untuk menonjolkan desain (misalnya, "dengan latar belakang netral, pencahayaan studio").
+                    **PENTING**: Di akhir seluruh prompt, tambahkan '--ar 3:4' untuk format potret yang cocok untuk kemasan.
                     Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
                 
                 } else if (promptType === 'productPhoto') {
                     const productName = document.getElementById('productPhotoName').value.trim();
                     if (!productName) { showError("Harap masukkan nama produk."); loader.classList.add('hidden'); return; }
+                    const productPhotoAspectRatio = document.getElementById('productPhotoAspectRatio').value.trim();
                     const productDesc = document.getElementById('productPhotoDesc').value.trim();
                     const productSetting = document.getElementById('productPhotoSetting').value.trim();
                     const productStyle = document.getElementById('productPhotoStyle').value.trim();
@@ -510,12 +522,14 @@
                     Deskripsi Produk: "${productDesc}"
                     Latar/Setting yang Diinginkan: "${productSetting}"
                     Gaya Foto yang Diminta: "${productStyle}"
+                    Format/Rasio Aspek yang Diinginkan: "${productPhotoAspectRatio}"
                     Berdasarkan ini, buatlah sebuah prompt untuk foto produk yang fotorealistis dan berkualitas tinggi. Prompt harus mencakup:
                     1.  **Subjek & Fokus:** Deskripsikan produk secara detail dan bagaimana ia ditampilkan (misalnya, close-up pada tekstur, melayang di udara).
                     2.  **Latar & Lingkungan:** Elaborasi pada setting yang diminta untuk menciptakan suasana yang sesuai.
                     3.  **Pencahayaan:** Jelaskan pencahayaan secara spesifik (misalnya, cahaya alami yang lembut, pencahayaan studio yang tajam, siluet dramatis).
                     4.  **Komposisi & Sudut Pandang:** Sarankan sudut pandang kamera dan komposisi (misalnya, eye-level, low angle, aturan sepertiga).
                     5.  **Suasana & Kesan:** Deskripsikan mood keseluruhan (misalnya, mewah, energik, tenang, futuristik).
+                    **PENTING**: Di akhir seluruh prompt, **wajib** tambahkan rasio aspek dalam format '--ar [rasio]'. Contohnya, jika format adalah 'Lanskap 4:3', maka tambahkan '--ar 4:3' di akhir.
                     Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
                 }
                 
