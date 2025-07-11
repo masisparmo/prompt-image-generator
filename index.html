@@ -54,6 +54,16 @@
         .modal-content {
             transition: transform 0.3s ease;
         }
+        .hidden-field {
+            transition: all 0.5s ease;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+        .visible-field {
+            max-height: 100px; /* Adjust as needed */
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -77,14 +87,14 @@
 
             <div class="space-y-6 mb-6">
                 <div>
-                    <label for="idea" class="block text-sm font-bold text-slate-700 mb-2">1. Masukkan Ide Dasar Anda</label>
-                    <textarea id="idea" rows="4" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: seekor naga di perpustakaan kuno"></textarea>
+                    <label for="idea" class="block text-sm font-bold text-slate-700 mb-2">1. Masukkan Ide Dasar / Deskripsi Brand</label>
+                    <textarea id="idea" rows="4" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: seekor naga di perpustakaan kuno ATAU sebuah kedai kopi yang ramah lingkungan dan modern"></textarea>
                 </div>
                 
                 <div>
                     <label for="aspectRatio" class="block text-sm font-bold text-slate-700 mb-2">2. Pilih Format/Rasio Aspek</label>
                     <select id="aspectRatio" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2">
-                        <option value="Persegi 1:1 (cocok untuk feed Instagram)">Persegi 1:1 (Feed Instagram)</option>
+                        <option value="Persegi 1:1 (cocok untuk logo, feed Instagram)">Persegi 1:1 (Logo, Feed Instagram)</option>
                         <option value="Lanskap 16:9 (cocok untuk YouTube, X/Twitter)">Lanskap 16:9 (YouTube, X/Twitter)</option>
                         <option value="Lanskap 4:3 (cocok untuk presentasi)">Lanskap 4:3 (Presentasi)</option>
                         <option value="Potret 9:16 (cocok untuk Stories, Reels, TikTok)">Potret 9:16 (Stories, Reels, TikTok)</option>
@@ -94,8 +104,9 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label class="block text-sm font-bold text-slate-700 md:col-span-2">3. Tentukan Detail Visual (Pilih atau Ketik Sendiri)</label>
-                    <div>
+                    <div class="md:col-span-2">
                         <select id="style" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2 mb-2">
+                            <option value="Logo">Gaya: Logo</option>
                             <option value="Fotorealistis">Gaya: Fotorealistis</option>
                             <option value="Lukisan Cat Minyak">Gaya: Lukisan Cat Minyak</option>
                             <option value="Seni Digital">Gaya: Seni Digital</option>
@@ -106,6 +117,12 @@
                         </select>
                         <input type="text" id="customStyle" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Atau ketik gaya sendiri...">
                     </div>
+                    
+                    <div id="logoNameContainer" class="md:col-span-2 hidden-field">
+                        <label for="logoName" class="block text-sm font-bold text-slate-700 mb-2">Nama Brand atau Teks Logo</label>
+                        <input type="text" id="logoName" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: 'Naga Pustaka' atau 'EcoBean'">
+                    </div>
+
                     <div>
                         <select id="composition" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2 mb-2">
                             <option value="Close-up">Komposisi: Close-up</option>
@@ -116,7 +133,7 @@
                         </select>
                         <input type="text" id="customComposition" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Atau ketik komposisi sendiri...">
                     </div>
-                    <div class="md:col-span-2">
+                    <div>
                         <select id="lighting" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2 mb-2">
                             <option value="Cahaya golden hour">Pencahayaan: Golden hour</option>
                             <option value="Pencahayaan dramatis">Pencahayaan: Dramatis</option>
@@ -181,11 +198,31 @@
             const loader = document.getElementById('loader');
             const errorMessage = document.getElementById('errorMessage');
             
+            const styleSelect = document.getElementById('style');
+            const customStyleInput = document.getElementById('customStyle');
+            const logoNameContainer = document.getElementById('logoNameContainer');
+
             // Modal elements
             const apiKeyModal = document.getElementById('apiKeyModal');
             const howToGetApiKeyBtn = document.getElementById('howToGetApiKeyBtn');
             const closeModalBtn = document.getElementById('closeModalBtn');
             const modalContent = document.querySelector('.modal-content');
+
+            function toggleLogoInput() {
+                const selectedStyle = styleSelect.value;
+                const customStyle = customStyleInput.value.trim();
+                if (customStyle.toLowerCase() === 'logo' || (customStyle === '' && selectedStyle === 'Logo')) {
+                    logoNameContainer.classList.remove('hidden-field');
+                    logoNameContainer.classList.add('visible-field');
+                } else {
+                    logoNameContainer.classList.add('hidden-field');
+                    logoNameContainer.classList.remove('visible-field');
+                }
+            }
+
+            styleSelect.addEventListener('change', toggleLogoInput);
+            customStyleInput.addEventListener('input', toggleLogoInput);
+            toggleLogoInput(); // Initial check
 
             // Show modal
             howToGetApiKeyBtn.addEventListener('click', () => {
@@ -233,7 +270,7 @@
                     return;
                 }
                 if (!idea) {
-                    showError("Harap masukkan ide dasar Anda.");
+                    showError("Harap masukkan ide dasar / deskripsi brand Anda.");
                     return;
                 }
 
@@ -242,15 +279,34 @@
                 errorMessage.classList.add('hidden');
                 loader.classList.remove('hidden');
 
-                const metaPrompt = `You are an expert prompt engineer for text-to-image AI models. Your task is to expand a user's basic idea into a rich, detailed, and evocative prompt.
-                
-                User's basic idea: "${idea}"
-                Selected visual style: "${style}"
-                Selected composition: "${composition}"
-                Selected lighting: "${lighting}"
-                Desired aspect ratio/format: "${aspectRatio}"
+                let metaPrompt = '';
+                if (style.toLowerCase() === 'logo') {
+                    const logoName = document.getElementById('logoName').value.trim();
+                    metaPrompt = `You are an expert logo design consultant. Your task is to generate a detailed prompt for a text-to-image AI to create a professional logo. The prompt should be a single, cohesive paragraph.
 
-                Combine these elements into a single, cohesive paragraph. The prompt should be descriptive, focusing on visual details, mood, and atmosphere that are appropriate for the specified format. Do not add any introductory text, concluding remarks, or explanations. Only output the final, single-paragraph prompt itself.`;
+                    Brand Description/Core Idea: "${idea}"
+                    Brand Name/Text for Logo: "${logoName}"
+                    Desired Aspect Ratio: "${aspectRatio}"
+
+                    Based on this, create a prompt that describes a logo concept. The prompt must include:
+                    1.  **Logo Style:** (e.g., minimalist, modern, vintage, flat design, vector logo).
+                    2.  **Icon/Symbolism:** A clear description of the main visual element and what it represents based on the brand description.
+                    3.  **Typography:** Suggest a font style (e.g., clean sans-serif, elegant serif, bold script) if the brand name is included.
+                    4.  **Color Palette:** Suggest a primary and secondary color scheme.
+                    5.  **Overall Feel:** The prompt should end with phrases like "on a clean white background, sharp details, suitable for brand identity."
+
+                    Do not add any introductory text or explanations. Only output the final, single-paragraph prompt.`;
+                } else {
+                    metaPrompt = `You are an expert prompt engineer for text-to-image AI models. Your task is to expand a user's basic idea into a rich, detailed, and evocative prompt.
+                
+                    User's basic idea: "${idea}"
+                    Selected visual style: "${style}"
+                    Selected composition: "${composition}"
+                    Selected lighting: "${lighting}"
+                    Desired aspect ratio/format: "${aspectRatio}"
+
+                    Combine these elements into a single, cohesive paragraph. The prompt should be descriptive, focusing on visual details, mood, and atmosphere that are appropriate for the specified format. Do not add any introductory text, concluding remarks, or explanations. Only output the final, single-paragraph prompt itself.`;
+                }
                 
                 try {
                     const chatHistory = [{ role: "user", parts: [{ text: metaPrompt }] }];
