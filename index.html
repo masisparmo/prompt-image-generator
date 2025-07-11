@@ -54,15 +54,17 @@
         .modal-content {
             transition: transform 0.3s ease;
         }
-        .hidden-field {
-            transition: all 0.5s ease;
+        .prompt-section {
+            transition: all 0.5s ease-in-out;
             max-height: 0;
             overflow: hidden;
             opacity: 0;
+            transform: translateY(-10px);
         }
-        .visible-field {
-            max-height: 100px; /* Adjust as needed */
+        .prompt-section.visible {
+            max-height: 1000px; /* Large enough to not clip content */
             opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -87,62 +89,108 @@
 
             <div class="space-y-6 mb-6">
                 <div>
-                    <label for="idea" class="block text-sm font-bold text-slate-700 mb-2">1. Masukkan Ide Dasar / Deskripsi Brand</label>
-                    <textarea id="idea" rows="4" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: seekor naga di perpustakaan kuno ATAU sebuah kedai kopi yang ramah lingkungan dan modern"></textarea>
-                </div>
-                
-                <div>
-                    <label for="aspectRatio" class="block text-sm font-bold text-slate-700 mb-2">2. Pilih Format/Rasio Aspek</label>
-                    <select id="aspectRatio" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2">
-                        <option value="Persegi 1:1 (cocok untuk logo, feed Instagram)">Persegi 1:1 (Logo, Feed Instagram)</option>
-                        <option value="Lanskap 16:9 (cocok untuk YouTube, X/Twitter)">Lanskap 16:9 (YouTube, X/Twitter)</option>
-                        <option value="Lanskap 4:3 (cocok untuk presentasi)">Lanskap 4:3 (Presentasi)</option>
-                        <option value="Potret 9:16 (cocok untuk Stories, Reels, TikTok)">Potret 9:16 (Stories, Reels, TikTok)</option>
-                        <option value="Potret 4:5 (cocok untuk feed Instagram)">Potret 4:5 (Feed Instagram)</option>
+                    <label for="promptType" class="block text-sm font-bold text-slate-700 mb-2">1. Pilih Tipe Prompt</label>
+                    <select id="promptType" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2">
+                        <option value="general">Gambar Umum</option>
+                        <option value="logo">Desain Logo</option>
+                        <option value="packaging">Desain Kemasan Produk</option>
+                        <option value="productPhoto">Foto Produk Promosi</option>
                     </select>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label class="block text-sm font-bold text-slate-700 md:col-span-2">3. Tentukan Detail Visual (Pilih atau Ketik Sendiri)</label>
-                    <div class="md:col-span-2">
-                        <select id="style" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2 mb-2">
-                            <option value="Logo">Gaya: Logo</option>
-                            <option value="Fotorealistis">Gaya: Fotorealistis</option>
-                            <option value="Lukisan Cat Minyak">Gaya: Lukisan Cat Minyak</option>
-                            <option value="Seni Digital">Gaya: Seni Digital</option>
-                            <option value="Gaya Anime/Manga">Gaya: Anime/Manga</option>
-                            <option value="Seni Piksel">Gaya: Seni Piksel</option>
-                            <option value="Fantasi">Gaya: Fantasi</option>
-                            <option value="Fiksi Ilmiah">Gaya: Fiksi Ilmiah</option>
+                <!-- General Image Section -->
+                <div id="generalSection" class="prompt-section space-y-4">
+                    <h3 class="text-lg font-semibold text-slate-800 border-b pb-2">Detail Gambar Umum</h3>
+                    <div>
+                        <label for="idea" class="block text-sm font-bold text-slate-700 mb-2">Ide Dasar</label>
+                        <textarea id="idea" rows="3" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: seekor naga di perpustakaan kuno"></textarea>
+                    </div>
+                    <div>
+                        <label for="aspectRatio" class="block text-sm font-bold text-slate-700 mb-2">Format/Rasio Aspek</label>
+                        <select id="aspectRatio" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2">
+                            <option value="Persegi 1:1 (cocok untuk feed Instagram)">Persegi 1:1 (Feed Instagram)</option>
+                            <option value="Lanskap 16:9 (cocok untuk YouTube, X/Twitter)">Lanskap 16:9 (YouTube, X/Twitter)</option>
+                            <option value="Potret 9:16 (cocok untuk Stories, Reels, TikTok)">Potret 9:16 (Stories, Reels, TikTok)</option>
                         </select>
-                        <input type="text" id="customStyle" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Atau ketik gaya sendiri...">
                     </div>
-                    
-                    <div id="logoNameContainer" class="md:col-span-2 hidden-field">
-                        <label for="logoName" class="block text-sm font-bold text-slate-700 mb-2">Nama Brand atau Teks Logo</label>
-                        <input type="text" id="logoName" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: 'Naga Pustaka' atau 'EcoBean'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="style" class="block text-sm font-bold text-slate-700 mb-2">Gaya Visual</label>
+                            <select id="style" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2 mb-2">
+                                <option value="Fotorealistis">Fotorealistis</option>
+                                <option value="Seni Digital">Seni Digital</option>
+                                <option value="Fantasi">Fantasi</option>
+                            </select>
+                            <input type="text" id="customStyle" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Atau ketik gaya sendiri...">
+                        </div>
+                        <div>
+                            <label for="lighting" class="block text-sm font-bold text-slate-700 mb-2">Pencahayaan</label>
+                            <select id="lighting" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2 mb-2">
+                                <option value="Sinematik">Sinematik</option>
+                                <option value="Cahaya golden hour">Golden hour</option>
+                                <option value="Neon">Neon</option>
+                            </select>
+                            <input type="text" id="customLighting" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Atau ketik pencahayaan sendiri...">
+                        </div>
                     </div>
+                </div>
 
+                <!-- Logo Design Section -->
+                <div id="logoSection" class="prompt-section space-y-4">
+                    <h3 class="text-lg font-semibold text-slate-800 border-b pb-2">Detail Desain Logo</h3>
                     <div>
-                        <select id="composition" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2 mb-2">
-                            <option value="Close-up">Komposisi: Close-up</option>
-                            <option value="Medium shot">Komposisi: Medium shot</option>
-                            <option value="Foto jarak jauh (Wide shot)">Komposisi: Wide shot</option>
-                            <option value="Dilihat dari bawah (Low angle)">Komposisi: Low angle</option>
-                            <option value="Dilihat dari atas (High angle)">Komposisi: High angle</option>
-                        </select>
-                        <input type="text" id="customComposition" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Atau ketik komposisi sendiri...">
+                        <label for="logoBrandDesc" class="block text-sm font-bold text-slate-700 mb-2">Deskripsi Brand</label>
+                        <textarea id="logoBrandDesc" rows="3" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: Sebuah kedai kopi yang ramah lingkungan, modern, dan melayani komunitas lokal"></textarea>
                     </div>
                     <div>
-                        <select id="lighting" class="form-select w-full px-3 py-2 rounded-lg border focus:ring-2 mb-2">
-                            <option value="Cahaya golden hour">Pencahayaan: Golden hour</option>
-                            <option value="Pencahayaan dramatis">Pencahayaan: Dramatis</option>
-                            <option value="Cahaya lembut dan menyebar">Pencahayaan: Lembut & menyebar</option>
-                            <option value="Neon">Pencahayaan: Neon</option>
-                            <option value="Cahaya bulan">Pencahayaan: Cahaya bulan</option>
-                            <option value="Sinematik">Pencahayaan: Sinematik</option>
-                        </select>
-                        <input type="text" id="customLighting" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Atau ketik pencahayaan sendiri...">
+                        <label for="logoName" class="block text-sm font-bold text-slate-700 mb-2">Nama Brand / Teks Logo</label>
+                        <input type="text" id="logoName" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: 'EcoBean'">
+                    </div>
+                    <div>
+                        <label for="logoStyle" class="block text-sm font-bold text-slate-700 mb-2">Gaya Logo</label>
+                        <input type="text" id="logoStyle" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: Minimalis, modern, vektor, flat design">
+                    </div>
+                </div>
+
+                <!-- Product Packaging Section -->
+                <div id="packagingSection" class="prompt-section space-y-4">
+                    <h3 class="text-lg font-semibold text-slate-800 border-b pb-2">Detail Desain Kemasan Produk</h3>
+                    <div>
+                        <label for="packagingProductName" class="block text-sm font-bold text-slate-700 mb-2">Nama Produk</label>
+                        <input type="text" id="packagingProductName" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: 'Keripik Kentang Rasa Madu Pedas'">
+                    </div>
+                    <div>
+                        <label for="packagingProductDesc" class="block text-sm font-bold text-slate-700 mb-2">Deskripsi & Target Audiens</label>
+                        <textarea id="packagingProductDesc" rows="3" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: Cemilan organik untuk dewasa muda yang aktif dan sadar kesehatan"></textarea>
+                    </div>
+                    <div>
+                        <label for="packagingType" class="block text-sm font-bold text-slate-700 mb-2">Tipe Kemasan</label>
+                        <input type="text" id="packagingType" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: Kantong pouch, kotak kardus, botol kaca">
+                    </div>
+                     <div>
+                        <label for="packagingStyle" class="block text-sm font-bold text-slate-700 mb-2">Gaya Desain</label>
+                        <input type="text" id="packagingStyle" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: Ceria dan penuh warna, mewah dan elegan, natural dan bersahaja">
+                    </div>
+                </div>
+
+                <!-- Product Photo Section -->
+                <div id="productPhotoSection" class="prompt-section space-y-4">
+                    <h3 class="text-lg font-semibold text-slate-800 border-b pb-2">Detail Foto Produk Promosi</h3>
+                    <div>
+                        <label for="productPhotoName" class="block text-sm font-bold text-slate-700 mb-2">Nama Produk</label>
+                        <input type="text" id="productPhotoName" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: 'Sepatu Lari Kilat 2.0'">
+                    </div>
+                    <div>
+                        <label for="productPhotoDesc" class="block text-sm font-bold text-slate-700 mb-2">Deskripsi & Fitur Utama Produk</label>
+                        <textarea id="productPhotoDesc" rows="3" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: Sepatu lari ultra-ringan dengan sol busa responsif dan upper yang breathable"></textarea>
+                    </div>
+                    <div>
+                        <label for="productPhotoSetting" class="block text-sm font-bold text-slate-700 mb-2">Latar / Setting Foto</label>
+                        <input type="text" id="productPhotoSetting" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: Di lintasan lari saat matahari terbenam, studio minimalis, di atas batu puncak gunung">
+                    </div>
+                     <div>
+                        <label for="productPhotoStyle" class="block text-sm font-bold text-slate-700 mb-2">Gaya Foto</label>
+                        <input type="text" id="productPhotoStyle" class="form-input w-full px-3 py-2 rounded-lg border focus:ring-2" placeholder="Contoh: Gaya hidup dengan model, close-up detail produk, foto aksi, melayang">
                     </div>
                 </div>
             </div>
@@ -198,9 +246,11 @@
             const loader = document.getElementById('loader');
             const errorMessage = document.getElementById('errorMessage');
             
-            const styleSelect = document.getElementById('style');
-            const customStyleInput = document.getElementById('customStyle');
-            const logoNameContainer = document.getElementById('logoNameContainer');
+            const promptTypeSelect = document.getElementById('promptType');
+            const generalSection = document.getElementById('generalSection');
+            const logoSection = document.getElementById('logoSection');
+            const packagingSection = document.getElementById('packagingSection');
+            const productPhotoSection = document.getElementById('productPhotoSection');
 
             // Modal elements
             const apiKeyModal = document.getElementById('apiKeyModal');
@@ -208,21 +258,16 @@
             const closeModalBtn = document.getElementById('closeModalBtn');
             const modalContent = document.querySelector('.modal-content');
 
-            function toggleLogoInput() {
-                const selectedStyle = styleSelect.value;
-                const customStyle = customStyleInput.value.trim();
-                if (customStyle.toLowerCase() === 'logo' || (customStyle === '' && selectedStyle === 'Logo')) {
-                    logoNameContainer.classList.remove('hidden-field');
-                    logoNameContainer.classList.add('visible-field');
-                } else {
-                    logoNameContainer.classList.add('hidden-field');
-                    logoNameContainer.classList.remove('visible-field');
-                }
+            function updateFormVisibility() {
+                const selectedType = promptTypeSelect.value;
+                generalSection.classList.toggle('visible', selectedType === 'general');
+                logoSection.classList.toggle('visible', selectedType === 'logo');
+                packagingSection.classList.toggle('visible', selectedType === 'packaging');
+                productPhotoSection.classList.toggle('visible', selectedType === 'productPhoto');
             }
 
-            styleSelect.addEventListener('change', toggleLogoInput);
-            customStyleInput.addEventListener('input', toggleLogoInput);
-            toggleLogoInput(); // Initial check
+            promptTypeSelect.addEventListener('change', updateFormVisibility);
+            updateFormVisibility(); // Initial call
 
             // Show modal
             howToGetApiKeyBtn.addEventListener('click', () => {
@@ -252,25 +297,8 @@
 
             generateBtn.addEventListener('click', async () => {
                 const apiKey = document.getElementById('apiKey').value.trim();
-                const idea = document.getElementById('idea').value.trim();
-                const aspectRatio = document.getElementById('aspectRatio').value;
-
-                // Logic to prioritize custom input over dropdown selection
-                const customStyle = document.getElementById('customStyle').value.trim();
-                const style = customStyle || document.getElementById('style').value;
-                
-                const customComposition = document.getElementById('customComposition').value.trim();
-                const composition = customComposition || document.getElementById('composition').value;
-
-                const customLighting = document.getElementById('customLighting').value.trim();
-                const lighting = customLighting || document.getElementById('lighting').value;
-
                 if (!apiKey) {
                     showError("Harap masukkan kunci API Gemini Anda.");
-                    return;
-                }
-                if (!idea) {
-                    showError("Harap masukkan ide dasar / deskripsi brand Anda.");
                     return;
                 }
 
@@ -280,32 +308,81 @@
                 loader.classList.remove('hidden');
 
                 let metaPrompt = '';
-                if (style.toLowerCase() === 'logo') {
-                    const logoName = document.getElementById('logoName').value.trim();
-                    metaPrompt = `You are an expert logo design consultant. Your task is to generate a detailed prompt for a text-to-image AI to create a professional logo. The prompt should be a single, cohesive paragraph.
+                const promptType = promptTypeSelect.value;
 
-                    Brand Description/Core Idea: "${idea}"
-                    Brand Name/Text for Logo: "${logoName}"
-                    Desired Aspect Ratio: "${aspectRatio}"
+                if (promptType === 'general') {
+                    const idea = document.getElementById('idea').value.trim();
+                    if (!idea) { showError("Harap masukkan ide dasar Anda."); return; }
+                    const aspectRatio = document.getElementById('aspectRatio').value;
+                    const customStyle = document.getElementById('customStyle').value.trim();
+                    const style = customStyle || document.getElementById('style').value;
+                    const customLighting = document.getElementById('customLighting').value.trim();
+                    const lighting = customLighting || document.getElementById('lighting').value;
 
-                    Based on this, create a prompt that describes a logo concept. The prompt must include:
-                    1.  **Logo Style:** (e.g., minimalist, modern, vintage, flat design, vector logo).
-                    2.  **Icon/Symbolism:** A clear description of the main visual element and what it represents based on the brand description.
-                    3.  **Typography:** Suggest a font style (e.g., clean sans-serif, elegant serif, bold script) if the brand name is included.
-                    4.  **Color Palette:** Suggest a primary and secondary color scheme.
-                    5.  **Overall Feel:** The prompt should end with phrases like "on a clean white background, sharp details, suitable for brand identity."
-
-                    Do not add any introductory text or explanations. Only output the final, single-paragraph prompt.`;
-                } else {
-                    metaPrompt = `You are an expert prompt engineer for text-to-image AI models. Your task is to expand a user's basic idea into a rich, detailed, and evocative prompt.
+                    metaPrompt = `Anda adalah seorang ahli rekayasa prompt untuk model AI teks-ke-gambar. Tugas Anda adalah mengembangkan ide dasar pengguna menjadi sebuah prompt yang kaya, detail, dan menggugah dalam Bahasa Indonesia.
+                    Ide dasar pengguna: "${idea}"
+                    Gaya visual yang dipilih: "${style}"
+                    Pencahayaan yang dipilih: "${lighting}"
+                    Format/rasio aspek yang diinginkan: "${aspectRatio}"
+                    Gabungkan elemen-elemen ini menjadi satu paragraf yang utuh. Prompt harus deskriptif, berfokus pada detail visual, suasana, dan atmosfer. Jangan tambahkan teks pengantar, kata penutup, atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
                 
-                    User's basic idea: "${idea}"
-                    Selected visual style: "${style}"
-                    Selected composition: "${composition}"
-                    Selected lighting: "${lighting}"
-                    Desired aspect ratio/format: "${aspectRatio}"
+                } else if (promptType === 'logo') {
+                    const brandDesc = document.getElementById('logoBrandDesc').value.trim();
+                    if (!brandDesc) { showError("Harap masukkan deskripsi brand."); return; }
+                    const logoName = document.getElementById('logoName').value.trim();
+                    const logoStyle = document.getElementById('logoStyle').value.trim();
 
-                    Combine these elements into a single, cohesive paragraph. The prompt should be descriptive, focusing on visual details, mood, and atmosphere that are appropriate for the specified format. Do not add any introductory text, concluding remarks, or explanations. Only output the final, single-paragraph prompt itself.`;
+                    metaPrompt = `Anda adalah seorang konsultan desain logo ahli. Tugas Anda adalah menghasilkan sebuah prompt detail dalam Bahasa Indonesia untuk AI teks-ke-gambar untuk membuat logo profesional. Prompt harus berupa satu paragraf yang utuh.
+                    Deskripsi Brand/Ide Inti: "${brandDesc}"
+                    Nama Brand/Teks untuk Logo: "${logoName}"
+                    Gaya Logo yang Diminta: "${logoStyle}"
+                    Berdasarkan ini, buatlah sebuah prompt yang mendeskripsikan konsep logo. Prompt harus mencakup:
+                    1.  **Gaya Logo:** (misalnya, minimalis, modern, vintage, desain datar, logo vektor).
+                    2.  **Ikon/Simbolisme:** Deskripsi yang jelas tentang elemen visual utama berdasarkan deskripsi brand.
+                    3.  **Tipografi:** Sarankan gaya font jika nama brand disertakan.
+                    4.  **Palet Warna:** Sarankan skema warna primer dan sekunder.
+                    5.  **Kesan Keseluruhan:** Akhiri prompt dengan frasa seperti "dengan latar belakang putih bersih, detail tajam, cocok untuk identitas brand."
+                    Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
+
+                } else if (promptType === 'packaging') {
+                    const productName = document.getElementById('packagingProductName').value.trim();
+                    if (!productName) { showError("Harap masukkan nama produk."); return; }
+                    const productDesc = document.getElementById('packagingProductDesc').value.trim();
+                    const packagingType = document.getElementById('packagingType').value.trim();
+                    const packagingStyle = document.getElementById('packagingStyle').value.trim();
+
+                    metaPrompt = `Anda adalah seorang desainer kemasan produk ahli. Tugas Anda adalah menghasilkan sebuah prompt detail dalam Bahasa Indonesia untuk AI teks-ke-gambar untuk membuat desain kemasan produk profesional. Prompt harus berupa satu paragraf yang utuh.
+                    Nama Produk: "${productName}"
+                    Deskripsi Produk & Target Audiens: "${productDesc}"
+                    Tipe Kemasan: "${packagingType}"
+                    Gaya Desain yang Diminta: "${packagingStyle}"
+                    Berdasarkan ini, buatlah sebuah prompt untuk mockup fotorealistis dari kemasan produk. Prompt harus mencakup:
+                    1.  **Detail Kemasan:** Deskripsikan bahan dan bentuk dari tipe kemasan.
+                    2.  **Branding:** Sertakan nama produk secara menonjol dengan font yang sesuai.
+                    3.  **Elemen Visual:** Deskripsikan grafis kunci, ilustrasi, atau pola yang mencerminkan deskripsi dan gaya produk.
+                    4.  **Palet Warna:** Sarankan skema warna yang cocok dengan gaya desain.
+                    5.  **Latar:** Tempatkan produk dalam pengaturan studio yang sederhana dan bersih dengan pencahayaan profesional untuk menonjolkan desain (misalnya, "dengan latar belakang netral, pencahayaan studio").
+                    Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
+                
+                } else if (promptType === 'productPhoto') {
+                    const productName = document.getElementById('productPhotoName').value.trim();
+                    if (!productName) { showError("Harap masukkan nama produk."); return; }
+                    const productDesc = document.getElementById('productPhotoDesc').value.trim();
+                    const productSetting = document.getElementById('productPhotoSetting').value.trim();
+                    const productStyle = document.getElementById('productPhotoStyle').value.trim();
+
+                    metaPrompt = `Anda adalah seorang direktur seni dan fotografer produk ahli. Tugas Anda adalah menghasilkan sebuah prompt detail dalam Bahasa Indonesia untuk AI teks-ke-gambar untuk membuat foto produk promosi yang menarik secara visual. Prompt harus berupa satu paragraf yang utuh.
+                    Nama Produk: "${productName}"
+                    Deskripsi Produk: "${productDesc}"
+                    Latar/Setting yang Diinginkan: "${productSetting}"
+                    Gaya Foto yang Diminta: "${productStyle}"
+                    Berdasarkan ini, buatlah sebuah prompt untuk foto produk yang fotorealistis dan berkualitas tinggi. Prompt harus mencakup:
+                    1.  **Subjek & Fokus:** Deskripsikan produk secara detail dan bagaimana ia ditampilkan (misalnya, close-up pada tekstur, melayang di udara).
+                    2.  **Latar & Lingkungan:** Elaborasi pada setting yang diminta untuk menciptakan suasana yang sesuai.
+                    3.  **Pencahayaan:** Jelaskan pencahayaan secara spesifik (misalnya, cahaya alami yang lembut, pencahayaan studio yang tajam, siluet dramatis).
+                    4.  **Komposisi & Sudut Pandang:** Sarankan sudut pandang kamera dan komposisi (misalnya, eye-level, low angle, aturan sepertiga).
+                    5.  **Suasana & Kesan:** Deskripsikan mood keseluruhan (misalnya, mewah, energik, tenang, futuristik).
+                    Jangan tambahkan teks pengantar atau penjelasan. Hanya hasilkan prompt akhir dalam satu paragraf.`;
                 }
                 
                 try {
@@ -345,7 +422,6 @@
 
             copyBtn.addEventListener('click', () => {
                 const textToCopy = promptText.textContent;
-                // Using the deprecated execCommand for broader compatibility in sandboxed environments.
                 const textArea = document.createElement('textarea');
                 textArea.value = textToCopy;
                 document.body.appendChild(textArea);
