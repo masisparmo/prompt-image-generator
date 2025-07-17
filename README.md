@@ -6,6 +6,8 @@ Generator Prompt Gambar Powered by Gemini Ai
 
 **Generator Prompt Gambar Gemini** adalah sebuah aplikasi web yang dirancang untuk membantu pengguna membuat _prompt_ (perintah teks) yang detail dan efektif untuk digunakan pada model AI generator gambar seperti Imagen, Midjourney, atau Stable Diffusion.
 
+Akses aplikasi di [https://promptgenerator.isparmo.com/](https://promptgenerator.isparmo.com/)
+
 Aplikasi ini memanfaatkan kecerdasan Google Gemini untuk mengubah ide-ide sederhana atau deskripsi produk menjadi paragraf prompt yang kaya akan detail visual, gaya, pencahayaan, dan komposisi. Tujuannya adalah untuk menjembatani kesenjangan antara visi kreatif pengguna dan hasil yang mampu diproduksi oleh AI, sehingga menghasilkan gambar yang lebih akurat dan berkualitas tinggi.
 
 2\. Penjelasan Fitur
